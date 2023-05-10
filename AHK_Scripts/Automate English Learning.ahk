@@ -1,0 +1,480 @@
+﻿ #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
+; #Warn  ; Enable warnings to assist with detecting common errors.
+SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
+#SingleInstance, Force ; Only launch the script once
+SetTitleMatchMode, regex ;
+
+; Ctrl:->^ Alt:-> ! Windows:-> # Tab, Enter {<Table> | Enter}
+^j::MsgBox, Chào cả nhà
+!j::Send, chúc cả nhà một ngày vẻ{!} ; có kí tự đặc biệt trong đó đoạn muôn Send thì dùng cặp dấu {}
+
+; dòng code này là phím tắt reload lại file SciTE4AutoHotKey
+^r::
+	Send, ^s
+	Sleep, 200
+	Reload
+	return
+
+; edit bất cứ đâu
+^#e::Edit ;ctrl + windows + e
+
+#IfWinActive, ahk_class SciTEWindow ahk_exe SciTE.exe
+^r::
+	Send, ^s
+	Sleep, 500
+	Reload
+	return
+
+#IfWinActive, ahk_class wxWindowNR ahk_exe Audacity.exe
+#w:: ;Windows:-> # tắt 1 bản audacidy
+	Send, ^w
+	Sleep, 500
+	Send, {Tab}
+	Sleep, 200
+	Send, {Enter}
+	return
+
+#t:: ; giảm tốc độ
+	Send, t
+	;~ đợi cho đến khi cửa sổ change tempo
+	WinWait, Change Tempo ahk_class #32770 ahk_exe Audacity.exe,, 4
+	if ErrorLevel
+	{
+		MsgBox, WinWait timd out.
+		return
+	}
+	Send, {Enter}
+	return
+
+;~ phím tắt sau chủ chạy với iTunes
+#IfWinActive, iTunes ahk_exe iTunes\.exe
+^g:: ; bật file trong phần mềm iTunes
+	;~ nhấp chuột phải
+	Send, +{F10}
+	;~ chon "show in windows explorer"
+	Send, h
+	;~ đợi 1000ms (=1s)
+	Sleep, 500
+	;~ copy đường dẫn của file vào clipboard
+	Send, !3 ;Alt + 3
+	;~ đợi 1000ms (=1s)
+	Sleep, 500
+	WinClose, A
+	;~ Dùng Audacity để mở đường dẫn lưu trong Clipboard
+	Run, "C:\Program Files\Audacity\audacity.exe" %Clipboard%
+	return
+
+
+
+
+
+
+
+
+
+; Ctrl:->^ Alt:-> ! Windows:-> # Tab, Enter {<Table> | Enter}
+; phải mở các trang sẵn bảng extension Multi Search
+; phải chừa bên gốc phải 1 khoảng trong khoản 8cm
+#IfWinActive, ahk_class Qt631QWindowIcon ahk_exe anki.exe
+^;:: ; dịch định nghĩa và ví dụ *phải bôi đen đoạn cần dịch
+	Send, ^c ; ctrl + c => copy
+	Send, !{Tab} ; Alt + Tab
+
+	Sleep, 500 ;  đợi nữa s
+	Send, {Tab}
+	Sleep, 200
+	Send, {Enter}
+	Sleep, 200
+	Send, ^v ; ctrl + v => paste ra
+
+	Sleep, 300 ; đợi 1/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 2/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 3/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 4/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 5/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 6/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 7/10s
+	Send, {Tab}
+	Sleep, 200 ; đợi 8/10s => 8s => copy bản dịch trên google stranslate
+	Send, {Tab}
+	Sleep, 500 ; đợi nữa s
+	Send, {Enter} ; nhấn enter
+	Send, !{Tab} ; tab vào lại anki
+	Sleep, 500 ; đợi nữa s
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab}
+	Send, {Tab} ; => tab 9 lần xuống field DinhNghia
+	Sleep, 200 ; đợi 2/10 giây
+	Send, ^v ; Ctrl + v => paste vào field DinhNghia
+	Sleep, 200 ; đợi 2/10 giây
+	Send, !{Tab} ; Alt + Tab
+	Sleep, 1000
+	Send ^{Tab} ;tab qua trang cambridge
+	Send, ^t ; gọi ctrl + t
+	return
+#IfWinActive , ahk_class Chrome_WidgetWin_1 ahk_exe chrome.exe
+^t::  ; đã được tự động gọi ctrl + t
+	InputBox, TuLoai , TuLoai,, , 100, 100, 3555,0, , , ; copy từ loại
+	Send ^{Tab}
+
+	InputBox, TiengViet , TiengViet,, , 100, 100, 3555,0, , , ; copy nghĩa tiếng Việt
+	Send, !{Tab}
+
+	Sleep, 1000
+	Send, {Tab} ; tab tu dinh nghia xuong tieng viet
+	Send, %TuLoai%  ; dan tu loai cua tu vao
+
+	Sleep, 100
+	Send, {Tab}
+	Sleep, 100
+	Send, ^v ; dan nghia TiengVietVao
+
+	Send, !{Tab}
+	Sleep, 1000
+	Send, ^{Tab} ;
+
+	InputBox, anh, anh,, , 100, 100, 3555,0, , ; di ra ngoai ctrl + c ; lấy ảnh copy bằng chuột
+	Sleep, 1100
+	Send, !{Tab}
+
+	Sleep, 500
+	Send, {Tab}
+	Sleep, 100
+	Send, ^v ; dan Anh
+
+	Sleep, 200 ; khúc thêm từ mới
+	Send, {Tab}
+
+	Sleep, 200
+	Send, {Tab} ; => lên field word
+
+	InputBox, ThemNua , ThemNua,, , 100, 100, 3555,0, , ;  ctrl + c trong fied word'
+	Sleep, 2000
+	Send, !{Tab}
+	Sleep, 500
+
+	Loop, 7
+	{
+	Send, ^{Tab}
+	Sleep, 100
+	}
+
+	; Googletranslate
+	Click 470 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 18 ; tab 15 lần xuống ô tìm kiếm của trang google translate
+	{
+	Send, {Tab}
+	Sleep 150
+	}
+	Sleep, 500
+	Send, {Enter}  ; enter này là xóa bản dịch cũ
+	Sleep, 500
+	Send, ^v
+	Sleep, 2000
+	Send, ^{Tab}
+
+	; Cambridge
+	Sleep, 100
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 16 ; tab 16 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 550
+	Send, ^v
+	Send, {Enter}
+	Sleep, 100
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; Lanban dictionary
+	Click 470 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 4 ; tab 4 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep 100
+	Send, ^v
+	Send, {Enter}
+	Sleep, 3500
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; google images
+	Click 470 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 6 ; tab 6 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 100
+	Send, ^v
+	Send, {Enter}
+	Sleep, 3500
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; soha
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 4 ; tab 6 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 100
+	Send, ^v
+	Send, {Enter}
+	Sleep, 3500 ; trang soha không loading kịp
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; Oxford
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 9 ; tab 9 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 100
+	Send, ^v
+	Send, {Enter}
+	Sleep, 100 ; mình sợ các trang không loading kịp nên thêm 100ms vào
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; LONGMAN
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 7 ; tab 9 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 100
+	Send, ^v
+	Send, {Enter}
+
+	Sleep, 300
+	Send, ^{Tab}
+	Sleep, 100
+
+	; GIPHY
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 13 ; tab 9 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+	Sleep, 150
+	Send, ^v
+	Send, {Enter}
+	Sleep, 4000
+	Send, ^{Tab}
+	Sleep, 100
+
+	; depositphotos
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 12 ; tab 9 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 60
+	}
+	Sleep, 150
+	Send, ^v
+	Send, {Enter}
+	Sleep, 3500
+
+	Send, ^{Tab}
+	Sleep, 100
+
+	; pixabay
+	Click 800 150 ; click vào ô tìm kiếm của google thì mới tab xuống thanh tìm kiếm của mấy trang kia được
+	Loop, 10 ; tab 10 lần xuống ô tìm kiếm của trang Cambridge
+	{
+	Send, {Tab}
+	Sleep 40
+	}
+
+	Sleep, 100
+	Send, ^v
+	Send, {Enter}
+	Sleep, 3000
+
+	Send, ^{Tab}
+	Sleep, 500
+
+	Send, !{Tab} ; Tab vao trong lai anki
+	Sleep, 200
+	Send, {Tab}
+	Sleep, 100
+	Send, {Tab}
+	return
+
+#IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe chrome.exe
+^n::
+	Send, có nghĩa cụ thể là gì
+	return
+^l::
+	Send, "Can you list the phrases and translate them into English side by side?"
+	Sleep, 100
+	Send, {Backspace}
+	return
+^k::
+	Send, trong câu này có cụm từ nào không liệt kê
+	return
+
+; Ctrl:->^ Alt:-> ! Windows:-> # Tab, Enter {<Table> | Enter} ;ctrl + q comment dòng code đó lại
+#IfWinActive
+#x:: ; mở xampp
+	Send, #q ; windows + q vào thanh tìm kiếm
+	Sleep, 400
+	Send, XAMPP
+	Sleep, 100
+	Send, {Enter} ; vào mở xampp
+
+	Sleep, 2500 ; nên đợi lâu
+	Send, {Tab}
+	Sleep, 100
+	Send, {Tab}
+
+	Sleep, 500
+	Send, {Enter}
+	Sleep, 1200
+	Send, {Tab}
+	Send, {Tab}
+	Sleep, 200
+	Send, {Enter}
+	Send, !{F4}
+	return
+
+#z:: ; mở 5 web: learning with text, chatgpt, cambridge, oxford và mở 2 file pdf & MS SQL Server
+	MyString = "D:\Code\Ebook\C#\Head First C#, 4th Edition-Jennifer Greene-O'Reilly Media-9781491976708-EBooksWorld.ir.pdf"
+	Run, "C:\Program Files (x86)\Microsoft SQL Server Management Studio 18\Common7\IDE\Ssms.exe" ; mở MS SQL Server
+	Sleep, 2000
+	Run, "C:\Program Files (x86)\Foxit Software\Foxit PDF Reader\FoxitPDFReader.exe" %MyString% ;mở file pdf
+	Sleep, 300
+	Run, "C:\Program Files\Microsoft Office\root\Office16\WINWORD.EXE"
+	Sleep, 200
+	Run, "http://localhost/lwt/edit_texts.php"
+	Sleep, 200
+	Run, "https://translate.google.com/"
+	Sleep, 200
+	Run, "https://chat.openai.com/c/036441b7-0cb6-4b4f-9a83-f05791c29883"
+	Sleep, 200
+	Run, "https://chat.openai.com/c/66a64ef3-090c-428e-859a-621b8b5b9292"
+	Sleep, 200
+	Run, "https://dictionary.cambridge.org/"
+	Sleep, 300
+	Run, "https://www.oxfordlearnersdictionaries.com/"
+	Sleep, 300
+	Run, "https://tr-ex.me/"
+	Sleep, 1000
+	Send, ^1
+	return
+
+#IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe chrome.exe
+\:: ; Dịch 1 một văn bản *lưu ý: không bật unikey, không đưa phần copy vào ô input, không nhìn chatgpt trước
+	InputBox, MotDoan , Copy một đoạn,, , 70, 100, 3555,0, ,
+	Sleep, 500
+
+	Send, ^2 ;qua trang google translate
+	Sleep, 350
+	Send, ^a
+	Sleep, 250
+	Send, ^v
+	Sleep, 250
+
+	Send, ^3 ;qua trang chatgpt
+	Sleep, 250
+	Send, ^a
+	Sleep, 350
+	Send, Can you accurately translate each sentence of this paragraph into individual Vietnamese sentences?
+	Sleep, 350
+
+	Send {shift Down}{Enter} ; xuống hàng
+	Sleep, 250
+	Send {shift Up}
+	Sleep, 250
+
+	Send, ^v
+	Sleep, 250
+	Send, {Enter}
+	Sleep, 250
+
+	Send, Can you identify the multi-word phrases in that sentence and translate them into Vietnamese?
+	Sleep, 500
+
+	Send, ^4
+	Sleep, 250
+	Send, ^a
+	Sleep, 350
+	Send, Can you accurately translate each sentence of this paragraph into individual Vietnamese sentences?
+	Sleep, 150
+
+	Send {shift Down}{Enter} ; xuống hàng
+	Sleep, 250
+	Send {shift Up}
+	Sleep, 150
+
+	Send, ^v
+	Sleep, 250
+
+
+	Send, ^1 ;quay lai LWT
+	return
+
+;~ p::
+	;~ Send {shift Down}{Enter}
+	;~ Sleep, 250
+	;~ Send {shift Up}
+	;~ return
+#IfWinActive
+-:: ;copy
+	Send, ^c
+	return
+=:: ;paste
+	Send, ^v
+	return
+
+#IfWinActive ahk_class Chrome_WidgetWin_1 ahk_exe chrome.exe
+]:: ; dịch sang tiếng Việt
+	Click Right
+	Sleep, 100
+	Loop, 10
+	{
+		Sleep, 20
+		Send {Down}
+	}
+
+
+	Sleep 150
+	Send, {Enter}
+	return
+[:: ; dịch lại sang tiếng Anh
+	Click Right
+	Sleep, 100
+	Send {Down 10}
+	Sleep 150
+	Send, {Enter}
+	Sleep 150
+	Send, {Left}
+	return
